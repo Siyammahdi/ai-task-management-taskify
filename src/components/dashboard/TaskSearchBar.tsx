@@ -17,7 +17,7 @@ export default function TaskSearchBar({ search, setSearch, onAddTask }: { search
           className="pl-10 w-full h-12 text-base rounded-lg border border-input bg-background focus:ring-2 focus:ring-primary/50 focus:border-primary shadow-sm"
         />
       </div>
-      <Button onClick={onAddTask} className="gap-2 px-6 py-3 text-base font-semibold mt-4 md:mt-0"><PlusIcon className="w-5 h-5" /> Add Task</Button>
+      <Button onClick={onAddTask} className="gap-2 px-6 py-3 text-base font-semibold mt-4 md:mt-0 mx-3"><PlusIcon className="w-5 h-5" /> Add Task</Button>
     </div>
   );
 } 

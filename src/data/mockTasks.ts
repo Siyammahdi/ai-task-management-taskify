@@ -3,7 +3,7 @@ const tasks = [
     id: "1",
     title: "Design Dashboard UI",
     description: "Create the main dashboard layout and sidebar navigation.",
-    status: "In Progress",
+    status: In Progress"",
     dueDate: "2025-07-10",
     subTasks: [
       { id: "1-1", title: "Sidebar", done: true },

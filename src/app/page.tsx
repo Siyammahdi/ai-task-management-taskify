@@ -1,6 +1,6 @@
-import DashboardPage from "./dashboard/page";
-
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <DashboardPage />;
+  redirect('/sign-in');
+  return null;
 }
