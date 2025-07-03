@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react";
 import { Clock, FileText, Loader2, PauseCircle, Eye, CheckCircle, XCircle } from "lucide-react";
 import { FaRegCircle, FaSpinner, FaCheckCircle, FaListUl } from "react-icons/fa";
+import AITaskSuggestions from "./AITaskSuggestions";
 
 type Task = {
   id: string;
@@ -22,33 +24,56 @@ function getStatusIcon(status: string) {
 }
 
 export default function TaskDetails({ task }: { task: Task }) {
+  const [subTasks, setSubTasks] = useState(task.subTasks || []);
+
+  useEffect(() => {
+    setSubTasks(task.subTasks || []);
+  }, [task]);
+
+  function toggleSubTaskDone(id: string) {
+    setSubTasks(subTasks => subTasks.map(st => st.id === id ? { ...st, done: !st.done } : st));
+  }
+
   return (
-    <div className="border border-border rounded-2xl h-[calc(100vh-9rem)] bg-card p-8 flex flex-col gap-4 pb-12">
-      <div className="flex items-center gap-3 mb-2">
-        <h2 className="text-3xl font-bold flex-1">{task.title}</h2>
-        <span className="flex items-center gap-1 text-xs px-3 py-1 rounded-md bg-primary/10 text-primary uppercase font-semibold">
-          {getStatusIcon(task.status)}
-          {task.status}
-        </span>
-      </div>
-      <div className="border-b border-border my-2" />
-      <div className="text-base text-muted-foreground mb-2">{task.description}</div>
-      <div className="flex items-center gap-2 text-sm mb-2">
-        <span className="font-medium">Due:</span>
-        <span>{task.dueDate}</span>
-      </div>
-      {task.subTasks && (
-        <div className="mt-2">
-          <div className="flex items-center gap-2 font-semibold mb-2"><FaListUl className="w-4 h-4 text-primary" /> Subtasks</div>
-          <ul className="list-disc list-inside space-y-1">
-            {task.subTasks.map((sub) => (
-              <li key={sub.id} className={sub.done ? "line-through text-muted-foreground" : ""}>
-                {sub.title}
-              </li>
-            ))}
-          </ul>
+    <div className="border border-border rounded-2xl h-[calc(100vh-9rem)] flex flex-col justify-between bg-card p-8">
+      <div className="flex flex-col gap-4 ">
+        <div className="flex items-center gap-3 mb-2">
+          <h2 className="text-3xl font-bold flex-1">{task.title}</h2>
+          <span className="flex items-center gap-1 text-xs px-3 py-1 rounded-md bg-primary/10 text-primary uppercase font-semibold">
+            {getStatusIcon(task.status)}
+            {task.status}
+          </span>
         </div>
-      )}
+        <div className="border-b border-border my-2" />
+        <div className="text-xl text-muted-foreground mb-2">{task.description}</div>
+        <div className="flex items-center gap-2 text-sm mb-2">
+          <span className="font-medium">Due:</span>
+          <span>{task.dueDate}</span>
+        </div>
+        {subTasks.length > 0 && (
+          <div className="mt-2">
+            <div className="flex items-center gap-2 text-xl font-semibold mb-2"><FaListUl className="w-5 h-5 text-primary" /> Subtasks</div>
+            <ul className="flex flex-col gap-2">
+              {subTasks.map((sub) => (
+                <li key={sub.id} className={`flex items-center gap-3 px-4 py-1 rounded-lg border transition-colors ${sub.done ? "bg-primary/10 text-muted-foreground" : "bg-background"}`}>
+                  <button
+                    onClick={() => toggleSubTaskDone(sub.id)}
+                    className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${sub.done ? "bg-primary border-primary text-white" : "border-border bg-background text-muted-foreground hover:border-primary"}`}
+                    aria-label={sub.done ? "Mark as not done" : "Mark as done"}
+                  >
+                    {sub.done ? <CheckCircle className="w-4 h-4" /> : <span className="block w-3 h-3 rounded-full bg-transparent" />}
+                  </button>
+                  <span className="flex-1 text-base font-medium">{sub.title}</span>
+                  {sub.done && <span className="text-xs px-2 py-0.5 rounded bg-primary/10 text-primary font-semibold">Done</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+      <div className="h-1/3 mb-8">
+        <AITaskSuggestions />
+      </div>
     </div>
   );
 } 

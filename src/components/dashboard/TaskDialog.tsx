@@ -45,7 +45,7 @@ export default function TaskDialog({ open, setOpen, setTasks }: { open: boolean;
   }
 
   function handleAddSubTask() {
-    if (subTaskInput.trim()) {
+    if (subTaskInput.trim() && subTaskInput.length <= 50) {
       setSubTasks([...subTasks, subTaskInput.trim()]);
       setSubTaskInput("");
     }
@@ -122,9 +122,12 @@ export default function TaskDialog({ open, setOpen, setTasks }: { open: boolean;
             <label className="font-medium text-sm">Subtasks</label>
             <div className="flex gap-2">
               <Input
-                placeholder="Add a subtask"
+                placeholder="Add a subtask (max 50 characters)"
                 value={subTaskInput}
-                onChange={e => setSubTaskInput(e.target.value)}
+                onChange={e => {
+                  const value = e.target.value;
+                  if (value.length <= 50) setSubTaskInput(value);
+                }}
                 onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); handleAddSubTask(); } }}
                 className="h-12 min-h-[48px]"
               />
