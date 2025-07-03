@@ -20,6 +20,19 @@ function getStatusIcon(status: string) {
   return <Clock className="text-primary w-4 h-4" />;
 }
 
+function formatDate(dateString: string): string {
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  } catch (error) {
+    return dateString; // Return original string if parsing fails
+  }
+}
+
 export default function TaskCard({ task, showStatusIcon, isSelected }: { task: Task; showStatusIcon?: boolean; isSelected?: boolean }) {
   return (
     <div className={"flex flex-col gap-2 p-5 bg-card rounded-xl " + (isSelected ? "bg-primary/10" : "")}>
@@ -33,7 +46,7 @@ export default function TaskCard({ task, showStatusIcon, isSelected }: { task: T
       </div>
       <p className="text-sm text-muted-foreground line-clamp-2">{task.description}</p>
       <div className="flex items-center justify-between text-xs mt-2">
-        <span>Due: {task.dueDate}</span>
+        <span>Due: {formatDate(task.dueDate)}</span>
         {task.subTasks && (
           <span>{task.subTasks.length} Subtasks</span>
         )}

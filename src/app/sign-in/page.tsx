@@ -4,17 +4,39 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ListTodoIcon } from 'lucide-react';
+import { toast } from "sonner";
 
 export default function SignInPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    // TODO: Call backend API for sign-in
+    setLoading(true);
+    try {
+      const res = await fetch('http://localhost:4000/auth/sign-in', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Sign in failed');
+      } else {
+        localStorage.setItem('token', data.token);
+        router.push('/dashboard');
+      }
+    } catch (err) {
+      setError('Sign in failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,7 +72,9 @@ export default function SignInPage() {
               className="h-12 text-base rounded-xl bg-zinc-100/60 dark:bg-zinc-800/60 border-none focus:ring-2 focus:ring-primary/30"
             />
             {error && <div className="text-red-500 text-sm text-center">{error}</div>}
-            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md bg-gradient-to-r from-primary/90 to-emerald-500 hover:from-primary hover:to-indigo-500">Sign In</Button>
+            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md bg-gradient-to-r from-primary/90 to-emerald-500 hover:from-primary hover:to-indigo-500" disabled={loading}>
+              {loading ? 'Signing In...' : 'Sign In'}
+            </Button>
             <div className="text-sm text-muted-foreground text-center">
               Don&apos;t have an account?{' '}
               <Link href="/sign-up" className="text-primary font-semibold">Sign Up</Link>

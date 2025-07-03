@@ -4,14 +4,19 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ListTodoIcon } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function SignUpPage() {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +25,28 @@ export default function SignUpPage() {
       setError('Passwords do not match');
       return;
     }
-    // TODO: Call backend API for sign-up
+    setLoading(true);
+    try {
+      const res = await fetch('http://localhost:4000/auth/sign-up', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, username, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Sign up failed');
+        toast.error(data.error || 'Sign up failed');
+      } else {
+        localStorage.setItem('token', data.token);
+        toast.success('Account created!');
+        router.push('/dashboard');
+      }
+    } catch (err) {
+      setError('Sign up failed. Please try again.');
+      toast.error('Sign up failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,6 +70,14 @@ export default function SignUpPage() {
               placeholder="Name"
               value={name}
               onChange={e => setName(e.target.value)}
+              required
+              className="h-12 text-base rounded-xl bg-zinc-100/60 dark:bg-zinc-800/60 border-none focus:ring-2 focus:ring-primary/30"
+            />
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               required
               className="h-12 text-base rounded-xl bg-zinc-100/60 dark:bg-zinc-800/60 border-none focus:ring-2 focus:ring-primary/30"
             />
@@ -72,7 +106,9 @@ export default function SignUpPage() {
               className="h-12 text-base rounded-xl bg-zinc-100/60 dark:bg-zinc-800/60 border-none focus:ring-2 focus:ring-primary/30"
             />
             {error && <div className="text-red-500 text-sm text-center">{error}</div>}
-            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md bg-gradient-to-r from-primary/90 to-emerald-500/90 hover:from-primary hover:to-emerald-500">Sign Up</Button>
+            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md bg-gradient-to-r from-primary/90 to-emerald-500/90 hover:from-primary hover:to-emerald-500" disabled={loading}>
+              {loading ? 'Signing Up...' : 'Sign Up'}
+            </Button>
             <div className="text-sm text-muted-foreground text-center">
               Already have an account?{' '}
               <Link href="/sign-in" className="text-primary font-semibold">Sign In</Link>

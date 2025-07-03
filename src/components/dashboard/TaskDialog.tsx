@@ -20,24 +20,20 @@ const STATUS_OPTIONS = [
   { value: "Canceled", label: "Canceled", icon: <XCircle className="text-destructive w-4 h-4" />, tooltip: "Task has been canceled and will not be completed." },
 ];
 
-export default function TaskDialog({ open, setOpen, setTasks }: { open: boolean; setOpen: (v: boolean) => void; setTasks: (fn: (prev: any[]) => any[]) => void }) {
+export default function TaskDialog({ open, setOpen, setTasks }: { open: boolean; setOpen: (v: boolean) => void; setTasks: (task: any) => void }) {
   const [form, setForm] = useState<{ title: string; description: string; status: string; dueDate: Date | undefined }>({ title: "", description: "", status: "Pending", dueDate: undefined });
   const [subTaskInput, setSubTaskInput] = useState("");
   const [subTasks, setSubTasks] = useState<string[]>([]);
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   function handleAddTask() {
-    setTasks(prev => [
-      ...prev,
-      {
-        id: (prev.length + 1).toString(),
-        title: form.title,
-        description: form.description,
-        status: form.status,
-        dueDate: form.dueDate ? format(form.dueDate, "yyyy-MM-dd") : "",
-        subTasks: subTasks.length > 0 ? subTasks.map((t, i) => ({ id: `${prev.length + 1}-${i + 1}`, title: t, done: false })) : undefined,
-      },
-    ]);
+    setTasks({
+      title: form.title,
+      description: form.description,
+      status: form.status,
+      dueDate: form.dueDate ? form.dueDate.toISOString() : undefined,
+      subTasks: subTasks.length > 0 ? subTasks.map((t, i) => ({ title: t, done: false })) : undefined,
+    });
     setForm({ title: "", description: "", status: "Pending", dueDate: undefined });
     setSubTasks([]);
     setSubTaskInput("");
