@@ -1,4 +1,4 @@
-import { Clock, FileText, Loader2, PauseCircle, Eye, CheckCircle, XCircle } from "lucide-react";
+import { Clock, FileText, Loader2, PauseCircle, Eye, CheckCircle, XCircle, Trash2 } from "lucide-react";
 
 type Task = {
   id: string;
@@ -28,14 +28,14 @@ function formatDate(dateString: string): string {
       month: 'short', 
       day: 'numeric' 
     });
-  } catch (error) {
+  } catch {
     return dateString; // Return original string if parsing fails
   }
 }
 
-export default function TaskCard({ task, showStatusIcon, isSelected }: { task: Task; showStatusIcon?: boolean; isSelected?: boolean }) {
+export default function TaskCard({ task, showStatusIcon, isSelected, onDeleteClick }: { task: Task; showStatusIcon?: boolean; isSelected?: boolean; onDeleteClick?: (e: React.MouseEvent, taskId: string) => void }) {
   return (
-    <div className={"flex flex-col gap-2 p-5 bg-card rounded-xl " + (isSelected ? "bg-primary/10" : "")}>
+    <div className={"flex flex-col gap-2 p-5 bg-card rounded-xl relative " + (isSelected ? "bg-primary/10" : "") }>
       <div className="flex items-center gap-2 mb-1">
         {showStatusIcon && getStatusIcon(task.status)}
         <h2 className={"font-semibold text-lg truncate max-w-[70%] " + (isSelected ? "text-primary" : "")}>{task.title}</h2>
@@ -47,9 +47,21 @@ export default function TaskCard({ task, showStatusIcon, isSelected }: { task: T
       <p className="text-sm text-muted-foreground line-clamp-2">{task.description}</p>
       <div className="flex items-center justify-between text-xs mt-2">
         <span>Due: {formatDate(task.dueDate)}</span>
-        {task.subTasks && (
-          <span>{task.subTasks.length} Subtasks</span>
-        )}
+        <div className="flex items-center gap-2">
+          {task.subTasks && (
+            <span>{task.subTasks.length} Subtasks</span>
+          )}
+          {onDeleteClick && (
+            <button
+              className="ml-2 p-1 rounded-full text-destructive bg-destructive/10 hover:bg-destructive/20 transition-colors"
+              onClick={e => onDeleteClick(e, task.id)}
+              title="Delete Task"
+              aria-label="Delete Task"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

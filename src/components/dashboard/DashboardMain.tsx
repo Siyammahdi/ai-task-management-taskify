@@ -9,22 +9,9 @@ import TaskSearchBar from "./TaskSearchBar";
 import TaskDialog from "./TaskDialog";
 import { jwtDecode } from "jwt-decode";
 import { toast } from 'sonner';
+import type { Task } from "@/types";
 
-interface SubTask {
-  id: number;
-  title: string;
-  done: boolean;
-}
-
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  status: string;
-  dueDate: string;
-  userId: string;
-  subtasks?: SubTask[];
-}
+interface SubTask { id: string | number; title: string; done: boolean; }
 
 export default function DashboardMain() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -37,7 +24,9 @@ export default function DashboardMain() {
   useEffect(() => {
     const fetchTasks = async () => {
       setLoading(true);
+      let toastId: string | number | undefined;
       try {
+        toastId = toast.loading('Loading tasks...');
         const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
         const res = await fetch("http://localhost:4000/tasks", {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -45,15 +34,19 @@ export default function DashboardMain() {
         const data = await res.json();
         setTasks(
           Array.isArray(data)
-            ? data.map((t: any) => ({
-                ...t,
-                id: String(t.id),
-                userId: String(t.userId),
-                subTasks: t.subtasks || [],
-              }))
+            ? data.map((t) => {
+                const task = t as Task;
+                return {
+                  ...task,
+                  id: String(task.id),
+                  userId: String(task.userId || ''),
+                  subTasks: (task.subTasks || []),
+                };
+              })
             : []
         );
-      } catch (err) {
+        toast.success('Tasks loaded!', { id: toastId });
+      } catch {
         setTasks([]);
         toast.error('Failed to fetch tasks');
       } finally {
@@ -64,11 +57,13 @@ export default function DashboardMain() {
   }, []);
 
   // Add new task via backend
-  const handleAddTask = async (task: any) => {
+  const handleAddTask = async (task: Omit<Task, 'id' | 'userId'>) => {
+    let toastId: string | number | undefined;
     try {
+      toastId = toast.loading('Creating task...');
       const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
       if (!token) return;
-      const decoded: any = jwtDecode(token);
+      const decoded = jwtDecode<{ userId: string }>(token);
       const userId = decoded.userId;
       const { title, description, status, dueDate, subTasks } = task;
       const res = await fetch("http://localhost:4000/tasks", {
@@ -82,10 +77,10 @@ export default function DashboardMain() {
       const data = await res.json();
       setTasks((prev) => [
         ...prev,
-        { ...data, id: String(data.id), userId: String(data.userId), subTasks: data.subtasks || [] },
+        { ...data, id: String(data.id), userId: String(data.userId), subTasks: data.subTasks || [] },
       ]);
-      toast.success('Task created!');
-    } catch (err) {
+      toast.success('Task created!', { id: toastId });
+    } catch {
       toast.error('Failed to create task');
     }
   };
@@ -97,13 +92,28 @@ export default function DashboardMain() {
     setSelectedTask(updatedTask);
   };
 
+  const handleDeleteTask = async (taskId: string) => {
+    let toastId: string | number | undefined;
+    try {
+      toastId = toast.loading('Deleting task...');
+      await fetch(`http://localhost:4000/tasks/${Number(taskId)}`, {
+        method: 'DELETE',
+      });
+      setTasks((prev) => prev.filter((t) => t.id !== taskId));
+      setSelectedTask((prev) => (prev && prev.id === taskId ? null : prev));
+      toast.success('Task deleted!', { id: toastId });
+    } catch {
+      toast.error('Failed to delete task');
+    }
+  };
+
   const filteredTasks = useMemo(() => {
     if (!search.trim()) return tasks;
     return tasks.filter(
       t =>
         t.title.toLowerCase().includes(search.toLowerCase()) ||
         t.description.toLowerCase().includes(search.toLowerCase()) ||
-        (t.subtasks && t.subtasks.some((st: any) => st.title.toLowerCase().includes(search.toLowerCase())))
+        (t.subTasks && t.subTasks.some((st: SubTask) => st.title.toLowerCase().includes(search.toLowerCase())))
     );
   }, [tasks, search]);
 
@@ -123,12 +133,12 @@ export default function DashboardMain() {
           <div className="hidden md:flex gap-8 w-full h-[calc(100vh-6rem)] min-h-0">
             <div className="flex-1 flex flex-col min-w-0 h-full">
               <ScrollArea className="flex-1 h-full min-h-0">
-                <TaskList tasks={filteredTasks} onSelect={setSelectedTask} selectedTask={selectedTask} singleColumn />
+                <TaskList tasks={filteredTasks.map(t => ({ ...t, userId: String(t.userId || '') }))} onSelect={setSelectedTask} selectedTask={selectedTask} singleColumn onDeleteTask={handleDeleteTask} />
               </ScrollArea>
             </div>
             <div className="w-1/2 h-[calc(100vh-6rem)] min-h-0 flex flex-col">
               <ScrollArea className="h-full min-h-0">
-                <TaskDetails task={selectedTask} onTaskUpdate={handleTaskUpdate} />
+                <TaskDetails task={{ ...selectedTask, userId: String(selectedTask.userId || '') }} onTaskUpdate={handleTaskUpdate} />
                 <div className="pb-12" />
               </ScrollArea>
             </div>
@@ -136,7 +146,7 @@ export default function DashboardMain() {
         ) : (
           <div className="h-[calc(100vh-6rem)] min-h-0">
             <ScrollArea className="h-full min-h-0">
-              <TaskList tasks={filteredTasks} onSelect={setSelectedTask} selectedTask={selectedTask} />
+              <TaskList tasks={filteredTasks.map(t => ({ ...t, userId: String(t.userId || '') }))} onSelect={setSelectedTask} selectedTask={selectedTask} onDeleteTask={handleDeleteTask} />
             </ScrollArea>
           </div>
         )}

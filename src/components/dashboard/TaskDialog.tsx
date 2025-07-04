@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { format } from "date-fns";
 import { PlusIcon, Clock, FileText, Loader2, PauseCircle, Eye, CheckCircle, XCircle } from "lucide-react";
+import type { Task } from "@/types";
 
 const STATUS_OPTIONS = [
   { value: "Logged", label: "Logged", icon: <FileText className="text-blue-500 w-4 h-4" />, tooltip: "Task has been logged for tracking or auditing purposes." },
@@ -20,7 +21,7 @@ const STATUS_OPTIONS = [
   { value: "Canceled", label: "Canceled", icon: <XCircle className="text-destructive w-4 h-4" />, tooltip: "Task has been canceled and will not be completed." },
 ];
 
-export default function TaskDialog({ open, setOpen, setTasks }: { open: boolean; setOpen: (v: boolean) => void; setTasks: (task: any) => void }) {
+export default function TaskDialog({ open, setOpen, setTasks }: { open: boolean; setOpen: (v: boolean) => void; setTasks: (task: Omit<Task, 'id' | 'userId'>) => void }) {
   const [form, setForm] = useState<{ title: string; description: string; status: string; dueDate: Date | undefined }>({ title: "", description: "", status: "Pending", dueDate: undefined });
   const [subTaskInput, setSubTaskInput] = useState("");
   const [subTasks, setSubTasks] = useState<string[]>([]);
@@ -31,8 +32,8 @@ export default function TaskDialog({ open, setOpen, setTasks }: { open: boolean;
       title: form.title,
       description: form.description,
       status: form.status,
-      dueDate: form.dueDate ? form.dueDate.toISOString() : undefined,
-      subTasks: subTasks.length > 0 ? subTasks.map((t, i) => ({ title: t, done: false })) : undefined,
+      dueDate: form.dueDate ? form.dueDate.toISOString() : "",
+      subTasks: subTasks.length > 0 ? subTasks.map((t, idx) => ({ id: `temp-${Date.now()}-${idx}`, title: t, done: false })) : undefined,
     });
     setForm({ title: "", description: "", status: "Pending", dueDate: undefined });
     setSubTasks([]);
@@ -48,7 +49,7 @@ export default function TaskDialog({ open, setOpen, setTasks }: { open: boolean;
   }
 
   function handleRemoveSubTask(idx: number) {
-    setSubTasks(subTasks.filter((_, i) => i !== idx));
+    setSubTasks(subTasks.filter((_, idx2) => idx2 !== idx));
   }
 
   return (

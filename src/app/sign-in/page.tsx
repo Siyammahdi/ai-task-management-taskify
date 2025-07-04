@@ -19,7 +19,9 @@ export default function SignInPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
+    let toastId: string | number | undefined;
     try {
+      toastId = toast.loading('Signing in...');
       const res = await fetch('http://localhost:4000/auth/sign-in', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -28,12 +30,15 @@ export default function SignInPage() {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || 'Sign in failed');
+        toast.error(data.error || 'Sign in failed', { id: toastId });
       } else {
         localStorage.setItem('token', data.token);
+        toast.success('Signed in successfully!', { id: toastId });
         router.push('/dashboard');
       }
-    } catch (err) {
+    } catch {
       setError('Sign in failed. Please try again.');
+      toast.error('Sign in failed. Please try again.');
     } finally {
       setLoading(false);
     }
