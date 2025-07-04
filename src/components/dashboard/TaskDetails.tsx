@@ -80,15 +80,21 @@ export default function TaskDetails({ task, onTaskUpdate }: { task: Task; onTask
     let toastId: string | number | undefined;
     try {
       toastId = toast.loading('Updating subtask...');
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
       await fetch(`https://ai-task-management-backend.vercel.app/tasks/${task.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` })
+        },
         body: JSON.stringify({
           subtasks: updated.map(st => ({ id: st.id, done: st.done })),
         }),
       });
       // Update only the done status from backend while preserving order
-      const res = await fetch(`https://ai-task-management-backend.vercel.app/tasks/${task.id}`);
+      const res = await fetch(`https://ai-task-management-backend.vercel.app/tasks/${task.id}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       const data = await res.json();
       const backendSubtasks = data.subtasks || data.subTasks || [];
       
@@ -117,9 +123,13 @@ export default function TaskDetails({ task, onTaskUpdate }: { task: Task; onTask
     let toastId: string | number | undefined;
     try {
       toastId = toast.loading('Updating status...');
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const response = await fetch(`https://ai-task-management-backend.vercel.app/tasks/${task.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` })
+        },
         body: JSON.stringify({
           status: newStatus,
         }),
@@ -164,9 +174,13 @@ export default function TaskDetails({ task, onTaskUpdate }: { task: Task; onTask
     let toastId: string | number | undefined;
     try {
       toastId = toast.loading('Saving changes...');
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const response = await fetch(`https://ai-task-management-backend.vercel.app/tasks/${task.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(token && { Authorization: `Bearer ${token}` })
+        },
         body: JSON.stringify({
           title: editTitle,
           description: editDescription,
