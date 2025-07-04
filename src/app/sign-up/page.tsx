@@ -29,7 +29,7 @@ export default function SignUpPage() {
     }
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:4000/auth/sign-up', {
+      const res = await fetch('https://ai-task-management-backend.vercel.app/auth/sign-up', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, username, password }),

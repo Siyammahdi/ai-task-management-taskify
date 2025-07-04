@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { RotateCcw } from "lucide-react";
 import AILoadingAnimation from "@/components/ui/AILoadingAnimation";
 
@@ -23,13 +23,25 @@ export default function AITaskSuggestions({ task }: { task: TaskData }) {
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [lastTaskId, setLastTaskId] = useState<string>('');
+
+  // Auto-generate suggestions when task changes
+  useEffect(() => {
+    const currentTaskId = `${task.title}-${task.description}`;
+    if (task.title && task.description && currentTaskId !== lastTaskId) {
+      setLastTaskId(currentTaskId);
+      setSuggestions(null);
+      setError(null);
+      handleGenerate();
+    }
+  }, [task.title, task.description, lastTaskId]);
 
   async function handleGenerate() {
     setLoading(true);
     setError(null);
     setSuggestions(null);
     try {
-      const res = await fetch("http://localhost:4000/ai/suggestions", {
+      const res = await fetch("https://ai-task-management-backend.vercel.app/ai/suggestions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -73,12 +85,21 @@ export default function AITaskSuggestions({ task }: { task: TaskData }) {
             dangerouslySetInnerHTML={{ __html: highlightSections(suggestions) }}
           />
         </div>
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center h-full w-full">
+          <div className="text-center">
+            <div className="text-red-500 text-sm mb-3">{error}</div>
+            <button onClick={handleGenerate} className="px-6 py-3 rounded-lg bg-primary text-white font-semibold text-base shadow hover:bg-primary/90 transition">Try Again</button>
+          </div>
+        </div>
       ) : (
         <div className="flex flex-col items-center justify-center h-full w-full">
-          <button onClick={handleGenerate} className="px-6 py-3 rounded-lg bg-primary text-white font-semibold text-base shadow hover:bg-primary/90 transition">Generate AI Task Suggestions</button>
+          <div className="text-center">
+            <div className="text-sm text-muted-foreground mb-3">AI suggestions are being generated...</div>
+            <button onClick={handleGenerate} className="px-6 py-3 rounded-lg bg-primary text-white font-semibold text-base shadow hover:bg-primary/90 transition">Generate AI Task Suggestions</button>
+          </div>
         </div>
       )}
-      {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
     </div>
   );
 } 

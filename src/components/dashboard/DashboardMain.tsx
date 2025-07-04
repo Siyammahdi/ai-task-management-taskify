@@ -28,7 +28,7 @@ export default function DashboardMain() {
       try {
         toastId = toast.loading('Loading tasks...');
         const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-        const res = await fetch("http://localhost:4000/tasks", {
+        const res = await fetch("https://ai-task-management-backend.vercel.app/tasks", {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
         const data = await res.json();
@@ -66,7 +66,7 @@ export default function DashboardMain() {
       const decoded = jwtDecode<{ userId: string }>(token);
       const userId = decoded.userId;
       const { title, description, status, dueDate, subTasks } = task;
-      const res = await fetch("http://localhost:4000/tasks", {
+      const res = await fetch("https://ai-task-management-backend.vercel.app/tasks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -96,7 +96,7 @@ export default function DashboardMain() {
     let toastId: string | number | undefined;
     try {
       toastId = toast.loading('Deleting task...');
-      await fetch(`http://localhost:4000/tasks/${Number(taskId)}`, {
+      await fetch(`https://ai-task-management-backend.vercel.app/tasks/${Number(taskId)}`, {
         method: 'DELETE',
       });
       setTasks((prev) => prev.filter((t) => t.id !== taskId));

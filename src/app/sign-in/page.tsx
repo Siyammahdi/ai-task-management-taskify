@@ -28,7 +28,7 @@ export default function SignInPage() {
     let toastId: string | number | undefined;
     try {
       toastId = toast.loading('Signing in...');
-      const res = await fetch('http://localhost:4000/auth/sign-in', {
+      const res = await fetch('https://ai-task-management-backend.vercel.app/auth/sign-in', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),

@@ -80,7 +80,7 @@ export default function TaskDetails({ task, onTaskUpdate }: { task: Task; onTask
     let toastId: string | number | undefined;
     try {
       toastId = toast.loading('Updating subtask...');
-      await fetch(`http://localhost:4000/tasks/${task.id}`, {
+      await fetch(`https://ai-task-management-backend.vercel.app/tasks/${task.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -88,7 +88,7 @@ export default function TaskDetails({ task, onTaskUpdate }: { task: Task; onTask
         }),
       });
       // Update only the done status from backend while preserving order
-      const res = await fetch(`http://localhost:4000/tasks/${task.id}`);
+      const res = await fetch(`https://ai-task-management-backend.vercel.app/tasks/${task.id}`);
       const data = await res.json();
       const backendSubtasks = data.subtasks || data.subTasks || [];
       
@@ -117,7 +117,7 @@ export default function TaskDetails({ task, onTaskUpdate }: { task: Task; onTask
     let toastId: string | number | undefined;
     try {
       toastId = toast.loading('Updating status...');
-      const response = await fetch(`http://localhost:4000/tasks/${task.id}`, {
+      const response = await fetch(`https://ai-task-management-backend.vercel.app/tasks/${task.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -164,7 +164,7 @@ export default function TaskDetails({ task, onTaskUpdate }: { task: Task; onTask
     let toastId: string | number | undefined;
     try {
       toastId = toast.loading('Saving changes...');
-      const response = await fetch(`http://localhost:4000/tasks/${task.id}`, {
+      const response = await fetch(`https://ai-task-management-backend.vercel.app/tasks/${task.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
