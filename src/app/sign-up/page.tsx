@@ -71,53 +71,53 @@ export default function SignUpPage() {
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <UserCheck className="h-5 w-5 text-gray-400" />
               </div>
-              <Input
-                type="text"
+            <Input
+              type="text"
                 placeholder="Full Name"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                required
+              value={name}
+              onChange={e => setName(e.target.value)}
+              required
                 className="pl-12 h-12 text-base rounded-xl bg-zinc-100/60 dark:bg-zinc-800/60 border-none focus:ring-2 focus:ring-primary/30"
-              />
+            />
             </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Mail className="h-5 w-5 text-gray-400" />
               </div>
-              <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
                 className="pl-12 h-12 text-base rounded-xl bg-zinc-100/60 dark:bg-zinc-800/60 border-none focus:ring-2 focus:ring-primary/30"
-              />
+            />
             </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <User className="h-5 w-5 text-gray-400" />
               </div>
-              <Input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                required
+            <Input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              required
                 className="pl-12 h-12 text-base rounded-xl bg-zinc-100/60 dark:bg-zinc-800/60 border-none focus:ring-2 focus:ring-primary/30"
-              />
+            />
             </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Lock className="h-5 w-5 text-gray-400" />
               </div>
-              <Input
+            <Input
                 type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
+              placeholder="Password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
                 className="pl-12 pr-12 h-12 text-base rounded-xl bg-zinc-100/60 dark:bg-zinc-800/60 border-none focus:ring-2 focus:ring-primary/30"
-              />
+            />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -134,14 +134,14 @@ export default function SignUpPage() {
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Lock className="h-5 w-5 text-gray-400" />
               </div>
-              <Input
+            <Input
                 type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-                required
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={e => setConfirmPassword(e.target.value)}
+              required
                 className="pl-12 pr-12 h-12 text-base rounded-xl bg-zinc-100/60 dark:bg-zinc-800/60 border-none focus:ring-2 focus:ring-primary/30"
-              />
+            />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}

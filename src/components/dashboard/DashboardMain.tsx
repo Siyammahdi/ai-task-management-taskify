@@ -7,7 +7,6 @@ import TaskDetails from "./TaskDetails";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import TaskSearchBar from "./TaskSearchBar";
 import TaskDialog from "./TaskDialog";
-import { jwtDecode } from "jwt-decode";
 import { toast } from 'sonner';
 import type { Task } from "@/types";
 

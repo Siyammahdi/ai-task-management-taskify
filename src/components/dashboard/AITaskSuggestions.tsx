@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { RotateCcw } from "lucide-react";
 import AILoadingAnimation from "@/components/ui/AILoadingAnimation";
 
@@ -25,18 +25,7 @@ export default function AITaskSuggestions({ task }: { task: TaskData }) {
   const [error, setError] = useState<string | null>(null);
   const [lastTaskId, setLastTaskId] = useState<string>('');
 
-  // Auto-generate suggestions when task changes
-  useEffect(() => {
-    const currentTaskId = `${task.title}-${task.description}`;
-    if (task.title && task.description && currentTaskId !== lastTaskId) {
-      setLastTaskId(currentTaskId);
-      setSuggestions(null);
-      setError(null);
-      handleGenerate();
-    }
-  }, [task.title, task.description, lastTaskId]);
-
-  async function handleGenerate() {
+  const handleGenerate = useCallback(async () => {
     setLoading(true);
     setError(null);
     setSuggestions(null);
@@ -61,7 +50,17 @@ export default function AITaskSuggestions({ task }: { task: TaskData }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [task.title, task.description, task.subTasks]);
+
+  useEffect(() => {
+    const currentTaskId = `${task.title}-${task.description}`;
+    if (task.title && task.description && currentTaskId !== lastTaskId) {
+      setLastTaskId(currentTaskId);
+      setSuggestions(null);
+      setError(null);
+      handleGenerate();
+    }
+  }, [task.title, task.description, lastTaskId, handleGenerate]);
 
   return (
     <div className="min-h-[220px] flex flex-col justify-center items-center bg-muted/80 rounded-xl  p-6 w-full">
