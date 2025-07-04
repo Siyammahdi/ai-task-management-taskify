@@ -40,7 +40,7 @@ export default function DashboardMain() {
                   ...task,
                   id: String(task.id),
                   userId: String(task.userId || ''),
-                  subTasks: (task.subTasks || []),
+                  subTasks: (task.subTasks || task.subtasks || []),
                 };
               })
             : []
@@ -77,7 +77,7 @@ export default function DashboardMain() {
       const data = await res.json();
       setTasks((prev) => [
         ...prev,
-        { ...data, id: String(data.id), userId: String(data.userId), subTasks: data.subTasks || [] },
+        { ...data, id: String(data.id), userId: String(data.userId), subTasks: data.subTasks || data.subtasks || [] },
       ]);
       toast.success('Task created!', { id: toastId });
     } catch {

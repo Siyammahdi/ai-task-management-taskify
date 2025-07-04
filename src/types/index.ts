@@ -13,4 +13,5 @@ export interface Task {
   dueDate: string;
   userId: string;
   subTasks?: SubTask[];
+  subtasks?: SubTask[]; // for backend compatibility
 } 

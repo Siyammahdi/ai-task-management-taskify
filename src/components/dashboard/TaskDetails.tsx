@@ -203,109 +203,111 @@ export default function TaskDetails({ task, onTaskUpdate }: { task: Task; onTask
   };
 
   return (
-    <div className="border border-border rounded-2xl h-[calc(100vh-9rem)] flex flex-col justify-between bg-card p-8">
-      <div className="flex flex-col gap-4 ">
-        <div className="flex items-center gap-3 mb-2">
-          {editMode ? (
-            <input className="text-3xl font-bold flex-1 bg-background border-b border-border focus:outline-none px-2 py-1" value={editTitle} onChange={e => setEditTitle(e.target.value)} />
-          ) : (
-            <h2 className="text-3xl font-bold flex-1">{task.title}</h2>
-          )}
-          <div className="relative">
-            <button
-              onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
-              className="flex items-center gap-1 text-xs px-3 py-1 rounded-md bg-primary/10 text-primary uppercase font-semibold hover:bg-primary/20 transition-colors"
-            >
-              {getStatusIcon(task.status)}
-              {task.status}
-              <ChevronDown className="w-3 h-3" />
-            </button>
-            
-            {isStatusDropdownOpen && (
-              <div className="absolute top-full right-0 mt-1 bg-card border border-border rounded-md shadow-lg z-10 min-w-[150px]">
-                {STATUS_OPTIONS.map((status) => (
-                  <button
-                    key={status}
-                    onClick={() => updateTaskStatus(status)}
-                    className={`w-full text-left px-3 py-2 text-xs hover:bg-muted transition-colors flex items-center gap-2 ${
-                      status === task.status ? "bg-primary/10 text-primary" : ""
-                    }`}
-                  >
-                    {getStatusIcon(status)}
-                    {status}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          {!editMode && (
-            <button
-              className="ml-2 px-3 py-1 rounded-md bg-primary text-white text-xs font-semibold flex items-center gap-2 shadow hover:bg-primary/90 transition-colors border border-primary"
-              onClick={() => setEditMode(true)}
-              title="Edit Task"
-            >
-              <Pencil className="w-3 h-3" />
-              Edit
-            </button>
-          )}
-        </div>
-        <div className="border-b border-border my-2" />
-        <ScrollArea className="max-h-[40vh] min-h-[120px] pr-2">
-          {editMode ? (
-            <textarea className="text-base text-muted-foreground mb-2 bg-background border border-border rounded p-2 w-full" value={editDescription} onChange={e => setEditDescription(e.target.value)} />
-          ) : (
-            <div className="text-base text-muted-foreground mb-2">{task.description}</div>
-          )}
-          <div className="flex items-center gap-2 text-sm mb-2">
-            <span className="font-medium">Due:</span>
+    <div className="border border-border rounded-2xl h-[calc(100vh-9rem)] bg-white p-8 flex flex-col">
+      <ScrollArea className="flex-1 w-full pr-4 min-h-0">
+        <div className="flex flex-col gap-4 pb-8">
+          <div className="flex items-center gap-3">
             {editMode ? (
-              <input type="date" className="border border-border rounded px-2 py-1 bg-background" value={editDueDate} onChange={e => setEditDueDate(e.target.value)} />
+              <input className="text-3xl font-bold flex-1 bg-background border-b border-border focus:outline-none px-2 py-1" value={editTitle} onChange={e => setEditTitle(e.target.value)} />
             ) : (
-              <span>{formatDate(task.dueDate)}</span>
+              <h2 className="text-2xl font-bold flex-1">{task.title}</h2>
             )}
-          </div>
-          <div className="mt-2">
-            <div className="flex items-center gap-2 text-xl font-semibold mb-2"><FaListUl className="w-5 h-5 text-primary" /> Subtasks</div>
-            <ul className="flex flex-col gap-2">
-              {editMode ? (
-                editSubTasks.map((sub) => (
-                  <li key={sub.id} className="flex items-center gap-3 px-4 py-1 rounded-lg bg-background">
-                    <input className="flex-1 text-sm font-medium border-b border-border bg-background focus:outline-none" value={sub.title} onChange={e => handleEditSubTaskChange(editSubTasks.findIndex(st => st.id === sub.id), 'title', e.target.value)} placeholder="Subtask title" />
-                    <Checkbox checked={sub.done} onCheckedChange={checked => handleEditSubTaskChange(editSubTasks.findIndex(st => st.id === sub.id), 'done', !!checked)} />
-                    <button className="text-destructive text-xs ml-2" onClick={() => handleDeleteSubTask(sub.id)}>Delete</button>
-                  </li>
-                ))
-              ) : (
-                subTasks.length > 0 && subTasks.map((sub: SubTask) => (
-                  <li key={sub.id} className={`flex items-center gap-3 px-4 py-1 rounded-lg transition-colors ${sub.done ? "bg-primary/10 text-muted-foreground" : "bg-background"}`}>
+            <div className="relative">
+              <button
+                onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+                className="flex items-center gap-1 text-xs px-3 py-1 rounded-md bg-primary/10 text-primary uppercase font-semibold hover:bg-primary/20 transition-colors"
+              >
+                {getStatusIcon(task.status)}
+                {task.status}
+                <ChevronDown className="w-3 h-3" />
+              </button>
+              
+              {isStatusDropdownOpen && (
+                <div className="absolute top-full right-0 mt-1 bg-card border border-border rounded-md shadow-lg z-10 min-w-[150px]">
+                  {STATUS_OPTIONS.map((status) => (
                     <button
-                      onClick={() => toggleSubTaskDone(sub.id)}
-                      className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${sub.done ? "bg-primary border-primary text-white" : "border-border bg-background text-muted-foreground hover:border-primary"}`}
-                      aria-label={sub.done ? "Mark as not done" : "Mark as done"}
+                      key={status}
+                      onClick={() => updateTaskStatus(status)}
+                      className={`w-full text-left px-3 py-2 text-xs hover:bg-muted transition-colors flex items-center gap-2 ${
+                        status === task.status ? "bg-primary/10 text-primary" : ""
+                      }`}
                     >
-                      {sub.done ? <CheckCircle className="w-4 h-4" /> : <span className="block w-3 h-3 rounded-full bg-transparent" />}
+                      {getStatusIcon(status)}
+                      {status}
                     </button>
-                    <span className="flex-1 text-sm font-medium">{sub.title}</span>
-                    {sub.done && <span className="text-[10px] px-2 rounded bg-primary/10 text-primary font-semibold">Done</span>}
-                  </li>
-                ))
+                  ))}
+                </div>
               )}
-            </ul>
-            {editMode && (
-              <button className="mt-2 px-3 py-1 rounded bg-primary text-white text-xs font-semibold hover:bg-primary/90" onClick={handleAddSubTask}>Add Subtask</button>
+            </div>
+            {!editMode && (
+              <button
+                className="ml-2 px-3 py-1 rounded-md bg-primary text-white text-xs font-semibold flex items-center gap-2 shadow hover:bg-primary/90 transition-colors border border-primary"
+                onClick={() => setEditMode(true)}
+                title="Edit Task"
+              >
+                <Pencil className="w-3 h-3" />
+                Edit
+              </button>
             )}
           </div>
-        </ScrollArea>
-        {editMode && (
-          <div className="flex gap-3 mt-4">
-            <button className="px-4 py-1 rounded bg-primary text-white font-semibold hover:bg-primary/90" onClick={handleSaveEdit}>Save</button>
-            <button className="px-4 py-1 rounded bg-muted text-foreground font-semibold hover:bg-muted/80" onClick={handleCancelEdit}>Cancel</button>
+          <div className="border-b border-border my-2" />
+          <div className="space-y-8">
+            {editMode ? (
+              <textarea className="text-base text-muted-foreground mb-4 bg-background border border-border rounded p-2 w-full" value={editDescription} onChange={e => setEditDescription(e.target.value)} />
+            ) : (
+              <div className="text-base text-muted-foreground mb-4">{task.description}</div>
+            )}
+            <div className="flex items-center gap-2 text-sm mb-4">
+              <span className="font-medium">Due:</span>
+              {editMode ? (
+                <input type="date" className="border border-border rounded px-2 py-1 bg-background" value={editDueDate} onChange={e => setEditDueDate(e.target.value)} />
+              ) : (
+                <span>{formatDate(task.dueDate)}</span>
+              )}
+            </div>
+            <div className="mt-4">
+              <div className="flex items-center gap-2 text-xl text-primary font-bold mb-2"><FaListUl className="w-5 h-5 text-primary" /> Subtasks</div>
+              <ul className="flex flex-col gap-2">
+                {editMode ? (
+                  editSubTasks.map((sub) => (
+                    <li key={sub.id} className="flex items-center gap-3 px-4 py-1 rounded-lg bg-background">
+                      <input className="flex-1 text-sm font-medium border-b border-border bg-background focus:outline-none" value={sub.title} onChange={e => handleEditSubTaskChange(editSubTasks.findIndex(st => st.id === sub.id), 'title', e.target.value)} placeholder="Subtask title" />
+                      <Checkbox checked={sub.done} onCheckedChange={checked => handleEditSubTaskChange(editSubTasks.findIndex(st => st.id === sub.id), 'done', !!checked)} />
+                      <button className="text-destructive text-xs ml-2" onClick={() => handleDeleteSubTask(sub.id)}>Delete</button>
+                    </li>
+                  ))
+                ) : (
+                  subTasks.length > 0 && subTasks.map((sub: SubTask) => (
+                    <li key={sub.id} className={`flex items-center gap-3 px-4 py-1 rounded-lg transition-colors ${sub.done ? "bg-primary/10 text-muted-foreground" : "bg-background"}`}>
+                      <button
+                        onClick={() => toggleSubTaskDone(sub.id)}
+                        className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${sub.done ? "bg-primary border-primary text-white" : "border-border bg-background text-muted-foreground hover:border-primary"}`}
+                        aria-label={sub.done ? "Mark as not done" : "Mark as done"}
+                      >
+                        {sub.done ? <CheckCircle className="w-4 h-4" /> : <span className="block w-3 h-3 rounded-full bg-transparent" />}
+                      </button>
+                      <span className="flex-1 text-sm font-medium">{sub.title}</span>
+                      {sub.done && <span className="text-[10px] px-2 rounded bg-primary/10 text-primary font-semibold">Done</span>}
+                    </li>
+                  ))
+                )}
+              </ul>
+              {editMode && (
+                <button className="mt-2 px-3 py-1 rounded bg-primary text-white text-xs font-semibold hover:bg-primary/90" onClick={handleAddSubTask}>Add Subtask</button>
+              )}
+            </div>
           </div>
-        )}
-      </div>
-      <div className="h-1/3 mb-8">
-        <AITaskSuggestions />
-      </div>
+          {editMode && (
+            <div className="flex gap-3 mt-4">
+              <button className="px-4 py-1 rounded bg-primary text-white font-semibold hover:bg-primary/90" onClick={handleSaveEdit}>Save</button>
+              <button className="px-4 py-1 rounded bg-muted text-foreground font-semibold hover:bg-muted/80" onClick={handleCancelEdit}>Cancel</button>
+            </div>
+          )}
+          <div className="mt-8">
+            <AITaskSuggestions task={{ title: task.title, description: task.description, subTasks: subTasks }} />
+          </div>
+        </div>
+      </ScrollArea>
     </div>
   );
 } 

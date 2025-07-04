@@ -65,7 +65,7 @@ export default function Menubar() {
               {label}
               {label === "Calendar" && (
                 <span className="ml-2 inline-block align-middle">
-                  <span className="bg-primary/10 text-primary text-[10px] font-semibold rounded px-1.5 pb-0.5 leading-none shadow-sm">new</span>
+                  <span className="bg-primary/10 text-primary text-[10px] font-semibold rounded px-1.5 pb-0.5 mb-1 leading-none shadow-sm">new</span>
                 </span>
               )}
             </span>
