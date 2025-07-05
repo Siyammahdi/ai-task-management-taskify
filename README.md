@@ -52,7 +52,7 @@ The **Smart Task Manager** lets users easily organize tasks with help from AI-po
 ### 1️⃣ Clone this repository
 
 ```bash
-git https://github.com/Siyammahdi/ai-task-management-taskify
+git https://github.com/Siyammahdi/ai-task-management-taskify.git
 cd ai-task-management-taskify
 ```
 
