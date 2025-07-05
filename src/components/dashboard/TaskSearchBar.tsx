@@ -1,6 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { PlusIcon, SearchIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { SearchIcon } from "lucide-react";
 
 export default function TaskSearchBar({ search, setSearch }: { search: string; setSearch: (v: string) => void }) {
   return (

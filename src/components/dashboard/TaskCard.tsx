@@ -33,32 +33,49 @@ function formatDate(dateString: string): string {
   }
 }
 
-export default function TaskCard({ task, showStatusIcon, isSelected, onDeleteClick }: { task: Task; showStatusIcon?: boolean; isSelected?: boolean; onDeleteClick?: (e: React.MouseEvent, taskId: string) => void }) {
+export default function TaskCard({ 
+  task, 
+  showStatusIcon, 
+  isSelected, 
+  onDeleteClick,
+  isCompact = false
+}: { 
+  task: Task; 
+  showStatusIcon?: boolean; 
+  isSelected?: boolean; 
+  onDeleteClick?: (e: React.MouseEvent, taskId: string) => void;
+  isCompact?: boolean;
+}) {
   return (
-    <div className={"flex flex-col gap-2 p-2 md:p-5 bg-card rounded-xl relative " + (isSelected ? "bg-primary/10" : "") }>
+    <div className={`flex flex-col gap-2 ${isCompact ? 'p-2 sm:p-3' : 'p-3 sm:p-4 lg:p-5'} bg-card rounded-xl relative transition-smooth card-hover ${isSelected ? "bg-primary/10" : ""}`}>
       <div className="flex items-center gap-2 mb-1">
         {showStatusIcon && getStatusIcon(task.status)}
-        <h2 className={"font-semibold text-base md:text-lg truncate max-w-[70%] " + (isSelected ? "text-primary" : "")}>{task.title}</h2>
-        <span className="ml-auto flex items-center gap-1 text-[9px] md:text-xs px-2 py-1 rounded-md bg-primary/10 text-primary uppercase font-semibold">
+        <h2 className={`font-semibold ${isCompact ? 'text-xs sm:text-sm' : 'text-sm sm:text-base lg:text-lg'} truncate max-w-[70%] ${isSelected ? "text-primary" : ""}`}>
+          {task.title}
+        </h2>
+        <span className="ml-auto flex items-center gap-1 text-[8px] sm:text-[9px] lg:text-xs px-2 py-1 rounded-md bg-primary/10 text-primary uppercase font-semibold">
           {getStatusIcon(task.status)}
-          {task.status}
+          <span className="hidden sm:inline">{task.status}</span>
+          <span className="sm:hidden">{task.status.slice(0, 1)}</span>
         </span>
       </div>
-      <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">{task.description}</p>
-      <div className="flex items-center justify-between text-[10px] md:text-xs mt-2">
-        <span>Due: {formatDate(task.dueDate)}</span>
+      <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+        {task.description}
+      </p>
+      <div className="flex items-center justify-between text-[9px] sm:text-[10px] lg:text-xs mt-2">
+        <span className="text-muted-foreground">Due: {formatDate(task.dueDate)}</span>
         <div className="flex items-center gap-2">
           {task.subTasks && (
-            <span>{task.subTasks.length} Subtasks</span>
+            <span className="hidden sm:inline">{task.subTasks.length} Subtasks</span>
           )}
           {onDeleteClick && (
             <button
-              className="ml-2 p-1 rounded-full text-destructive bg-destructive/10 hover:bg-destructive/20 transition-colors"
+              className="p-1.5 sm:p-1 rounded-full text-destructive bg-destructive/10 hover:bg-destructive/20 transition-colors"
               onClick={e => onDeleteClick(e, task.id)}
               title="Delete Task"
               aria-label="Delete Task"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           )}
         </div>

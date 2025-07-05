@@ -58,7 +58,7 @@ export default function CalendarPage() {
           </div>
 
           {/* Content Area */}
-          <div className="flex-1 overflow-auto p-4 lg:p-8">
+          <div className="flex-1 overflow-auto p-4 lg:p-6 xl:p-8">
             <div className="max-w-7xl mx-auto h-full">
               {/* Mobile Layout - Stacked */}
               <div className="lg:hidden flex flex-col gap-4 h-full">
@@ -98,24 +98,24 @@ export default function CalendarPage() {
                 </Card>
               </div>
 
-              {/* Desktop Layout - Side by Side */}
-              <div className="hidden lg:flex gap-6 h-full">
+              {/* Desktop Layout - Side by Side with better responsive design */}
+              <div className="hidden lg:flex gap-4 xl:gap-6 h-full">
                 {/* Calendar Card */}
-                <Card className="flex-1 p-6">
-                  <div className="h-full flex flex-col">
-                    <div className="flex-1">
+                <Card className="flex-1 p-4 xl:p-6 min-w-0 overflow-hidden">
+                  <div className="h-full flex flex-col min-w-0 overflow-hidden">
+                    <div className="flex-1 min-h-0 min-w-0 overflow-hidden">
                       <Calendar className="w-full h-full" />
                     </div>
-                    <div className="mt-6">
-                      <div className="rounded-lg bg-muted/60 p-4">
-                        <span className="text-sm font-semibold text-muted-foreground mb-3 block tracking-wide uppercase">
+                    <div className="mt-4 xl:mt-6 flex-shrink-0 min-w-0 overflow-hidden">
+                      <div className="rounded-lg bg-muted/60 p-3 xl:p-4 min-w-0 overflow-hidden">
+                        <span className="text-xs xl:text-sm font-semibold text-muted-foreground mb-2 xl:mb-3 block tracking-wide uppercase">
                           Public Holidays
                         </span>
-                        <div className="space-y-2">
+                        <div className="space-y-1 xl:space-y-2 min-w-0 overflow-hidden">
                           {SPECIAL_HOLIDAYS.map(holiday => (
-                            <div key={holiday.name} className="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary text-base">
-                              <span className="flex-1">{holiday.name}</span>
-                              <span className="text-sm text-muted-foreground">{holiday.date}</span>
+                            <div key={holiday.name} className="flex items-center gap-2 xl:gap-3 px-2 xl:px-3 py-1.5 xl:py-2 rounded-md xl:rounded-lg bg-primary/10 text-primary text-xs xl:text-sm min-w-0 overflow-hidden">
+                              <span className="flex-1 truncate text-ellipsis whitespace-nowrap min-w-0 max-w-[180px] xl:max-w-[240px]">{holiday.name}</span>
+                              <span className="text-xs text-muted-foreground flex-shrink-0 truncate text-ellipsis whitespace-nowrap max-w-[80px]">{holiday.date}</span>
                             </div>
                           ))}
                         </div>
@@ -124,11 +124,11 @@ export default function CalendarPage() {
                   </div>
                 </Card>
 
-                {/* Notes Card */}
-                <Card className="w-80 p-6">
-                  <h2 className="text-2xl font-semibold mb-4 text-primary">Temporary Note</h2>
+                {/* Notes Card - Responsive width */}
+                <Card className="w-72 xl:w-80 p-4 xl:p-6 flex-shrink-0">
+                  <h2 className="text-lg xl:text-2xl font-semibold mb-3 xl:mb-4 text-primary">Temporary Note</h2>
                   <Textarea
-                    className="resize-none w-full h-full border-none bg-muted/90 rounded-lg text-base"
+                    className="resize-none w-full h-full border-none bg-muted/90 rounded-lg text-sm xl:text-base"
                     placeholder="Write a quick note..."
                     value={note}
                     onChange={e => setNote(e.target.value)}

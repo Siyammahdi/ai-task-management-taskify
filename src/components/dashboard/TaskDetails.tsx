@@ -216,110 +216,180 @@ export default function TaskDetails({ task, onTaskUpdate }: { task: Task; onTask
     setEditSubTasks(task.subTasks || []);
   };
 
+  // Check if we're in a compact layout (stacked mode)
+  const isCompactLayout = typeof window !== "undefined" && window.innerWidth >= 1024 && window.innerWidth <= 1440;
+
   return (
-    <div className="border border-border rounded-2xl h-[calc(100vh-9rem)] bg-white p-8 flex flex-col">
-      <ScrollArea className="flex-1 w-full pr-4 min-h-0">
-        <div className="flex flex-col gap-4 pb-8">
-          <div className="flex items-center gap-3">
-            {editMode ? (
-              <input className="text-3xl font-bold flex-1 bg-background border-b border-border focus:outline-none px-2 py-1" value={editTitle} onChange={e => setEditTitle(e.target.value)} />
-            ) : (
-              <h2 className="text-2xl font-bold flex-1">{task.title}</h2>
-            )}
-            <div className="relative">
-              <button
-                onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
-                className="flex items-center gap-1 text-xs px-3 py-1 rounded-md bg-primary/10 text-primary uppercase font-semibold hover:bg-primary/20 transition-colors"
-              >
-                {getStatusIcon(task.status)}
-                {task.status}
-                <ChevronDown className="w-3 h-3" />
-              </button>
-              
-              {isStatusDropdownOpen && (
-                <div className="absolute top-full right-0 mt-1 bg-card border border-border rounded-md shadow-lg z-10 min-w-[150px]">
-                  {STATUS_OPTIONS.map((status) => (
-                    <button
-                      key={status}
-                      onClick={() => updateTaskStatus(status)}
-                      className={`w-full text-left px-3 py-2 text-xs hover:bg-muted transition-colors flex items-center gap-2 ${
-                        status === task.status ? "bg-primary/10 text-primary" : ""
-                      }`}
-                    >
-                      {getStatusIcon(status)}
-                      {status}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            {!editMode && (
-              <button
-                className="ml-2 px-3 py-1 rounded-md bg-primary text-white text-xs font-semibold flex items-center gap-2 shadow hover:bg-primary/90 transition-colors border border-primary"
-                onClick={() => setEditMode(true)}
-                title="Edit Task"
-              >
-                <Pencil className="w-3 h-3" />
-                Edit
-              </button>
-            )}
-          </div>
-          <div className="border-b border-border my-2" />
-          <div className="space-y-8">
-            {editMode ? (
-              <textarea className="text-base text-muted-foreground mb-4 bg-background border border-border rounded p-2 w-full" value={editDescription} onChange={e => setEditDescription(e.target.value)} />
-            ) : (
-              <div className="text-base text-muted-foreground mb-4">{task.description}</div>
-            )}
-            <div className="flex items-center gap-2 text-sm mb-4">
-              <span className="font-medium">Due:</span>
-              {editMode ? (
-                <input type="date" className="border border-border rounded px-2 py-1 bg-background" value={editDueDate} onChange={e => setEditDueDate(e.target.value)} />
-              ) : (
-                <span>{formatDate(task.dueDate)}</span>
-              )}
-            </div>
-            <div className="mt-4">
-              <div className="flex items-center gap-2 text-xl text-primary font-bold mb-2"><FaListUl className="w-5 h-5 text-primary" /> Subtasks</div>
-              <ul className="flex flex-col gap-2">
+    <div className="border border-border rounded-2xl h-full bg-card shadow-sm">
+      <ScrollArea className="h-full w-full scrollbar-thin">
+        <div className={`p-4 lg:p-6 space-y-4 ${isCompactLayout ? 'lg:space-y-4' : 'lg:space-y-6'}`}>
+          {/* Task Header */}
+          <div className="space-y-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
                 {editMode ? (
-                  editSubTasks.map((sub) => (
-                    <li key={sub.id} className="flex items-center gap-3 px-4 py-1 rounded-lg bg-background">
-                      <input className="flex-1 text-sm font-medium border-b border-border bg-background focus:outline-none" value={sub.title} onChange={e => handleEditSubTaskChange(editSubTasks.findIndex(st => st.id === sub.id), 'title', e.target.value)} placeholder="Subtask title" />
-                      <Checkbox checked={sub.done} onCheckedChange={checked => handleEditSubTaskChange(editSubTasks.findIndex(st => st.id === sub.id), 'done', !!checked)} />
-                      <button className="text-destructive text-xs ml-2" onClick={() => handleDeleteSubTask(sub.id)}>Delete</button>
-                    </li>
-                  ))
+                  <input 
+                    className="text-lg lg:text-xl font-bold flex-1 bg-transparent border-b border-border focus:border-primary outline-none px-2 py-1 w-full" 
+                    value={editTitle} 
+                    onChange={e => setEditTitle(e.target.value)} 
+                  />
                 ) : (
-                  subTasks.length > 0 && subTasks.map((sub: SubTask) => (
-                    <li key={sub.id} className={`flex items-center gap-3 px-4 py-1 rounded-lg transition-colors ${sub.done ? "bg-primary/10 text-muted-foreground" : "bg-background"}`}>
-                      <button
-                        onClick={() => toggleSubTaskDone(sub.id)}
-                        className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${sub.done ? "bg-primary border-primary text-white" : "border-border bg-background text-muted-foreground hover:border-primary"}`}
-                        aria-label={sub.done ? "Mark as not done" : "Mark as done"}
-                      >
-                        {sub.done ? <CheckCircle className="w-4 h-4" /> : <span className="block w-3 h-3 rounded-full bg-transparent" />}
-                      </button>
-                      <span className="flex-1 text-sm font-medium">{sub.title}</span>
-                      {sub.done && <span className="text-[10px] px-2 rounded bg-primary/10 text-primary font-semibold">Done</span>}
-                    </li>
-                  ))
+                  <h2 className="text-lg lg:text-xl font-bold break-words">{task.title}</h2>
                 )}
-              </ul>
-              {editMode && (
-                <button className="mt-2 px-3 py-1 rounded bg-primary text-white text-xs font-semibold hover:bg-primary/90" onClick={handleAddSubTask}>Add Subtask</button>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <div className="relative">
+                  <button
+                    onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+                    className="flex items-center gap-2 px-2 py-1 rounded-lg bg-primary/10 text-primary text-xs font-semibold hover:bg-primary/20 transition-colors"
+                  >
+                    {getStatusIcon(task.status)}
+                    <span className="hidden sm:inline">{task.status}</span>
+                    <span className="sm:hidden">{task.status.slice(0, 1)}</span>
+                    <ChevronDown className="w-3 h-3" />
+                  </button>
+                  
+                  {isStatusDropdownOpen && (
+                    <div className="absolute top-full right-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-10 min-w-[160px]">
+                      {STATUS_OPTIONS.map((status) => (
+                        <button
+                          key={status}
+                          onClick={() => updateTaskStatus(status)}
+                          className={`w-full text-left px-3 py-2 text-xs hover:bg-muted transition-colors flex items-center gap-2 first:rounded-t-lg last:rounded-b-lg ${
+                            status === task.status ? "bg-primary/10 text-primary" : ""
+                          }`}
+                        >
+                          {getStatusIcon(status)}
+                          {status}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {!editMode && (
+                  <button
+                    className="px-2 py-1 rounded-lg bg-primary text-white text-xs font-semibold flex items-center gap-1 shadow hover:bg-primary/90 transition-colors"
+                    onClick={() => setEditMode(true)}
+                    title="Edit Task"
+                  >
+                    <Pencil className="w-3 h-3" />
+                    <span className="hidden sm:inline">Edit</span>
+                  </button>
+                )}
+              </div>
+            </div>
+            
+            {/* Due Date */}
+            <div className="flex items-center gap-2 text-xs">
+              <span className="font-medium text-muted-foreground">Due:</span>
+              {editMode ? (
+                <input 
+                  type="date" 
+                  className="border border-border rounded px-2 py-1 bg-background focus:border-primary outline-none text-xs" 
+                  value={editDueDate} 
+                  onChange={e => setEditDueDate(e.target.value)} 
+                />
+              ) : (
+                <span className="text-foreground">{formatDate(task.dueDate)}</span>
               )}
             </div>
           </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <h3 className="font-semibold text-xs text-muted-foreground uppercase tracking-wide">Description</h3>
+            {editMode ? (
+              <textarea 
+                className="w-full min-h-[80px] p-3 bg-muted/50 border border-border rounded-lg focus:border-primary outline-none resize-none text-xs leading-relaxed" 
+                value={editDescription} 
+                onChange={e => setEditDescription(e.target.value)}
+                placeholder="Enter task description..."
+              />
+            ) : (
+              <p className="text-xs leading-relaxed text-foreground">{task.description}</p>
+            )}
+          </div>
+
+          {/* Subtasks */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-xs text-muted-foreground uppercase tracking-wide flex items-center gap-1">
+                <FaListUl className="w-3 h-3" />
+                Subtasks
+              </h3>
+              {editMode && (
+                <button
+                  onClick={handleAddSubTask}
+                  className="text-xs text-primary hover:text-primary/80 font-medium"
+                >
+                  + Add Subtask
+                </button>
+              )}
+            </div>
+            
+            <div className="space-y-1">
+              {(editMode ? editSubTasks : subTasks).map((subTask, index) => (
+                <div key={subTask.id} className="flex items-center gap-2 p-2 bg-muted/30 rounded-lg">
+                  <Checkbox
+                    checked={subTask.done}
+                    onCheckedChange={() => !editMode && toggleSubTaskDone(subTask.id)}
+                    disabled={editMode}
+                    className="scale-75"
+                  />
+                  {editMode ? (
+                    <input
+                      type="text"
+                      value={subTask.title}
+                      onChange={(e) => handleEditSubTaskChange(index, 'title', e.target.value)}
+                      className="flex-1 bg-transparent border-none outline-none text-xs"
+                      placeholder="Enter subtask title..."
+                    />
+                  ) : (
+                    <span className={`flex-1 text-xs ${subTask.done ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+                      {subTask.title}
+                    </span>
+                  )}
+                  {editMode && (
+                    <button
+                      onClick={() => handleDeleteSubTask(subTask.id)}
+                      className="text-destructive hover:text-destructive/80 p-0.5"
+                    >
+                      <XCircle className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
+              ))}
+              {subTasks.length === 0 && !editMode && (
+                <p className="text-xs text-muted-foreground text-center py-3">No subtasks yet</p>
+              )}
+            </div>
+          </div>
+
+          {/* AI Suggestions - Compact version for stacked layout */}
+          <div className="space-y-2">
+            <h3 className="font-semibold text-xs text-muted-foreground uppercase tracking-wide">AI Suggestions</h3>
+            <div className="min-h-[120px]">
+              <AITaskSuggestions task={{ title: task.title, description: task.description, subTasks: subTasks }} />
+            </div>
+          </div>
+
+          {/* Edit Mode Actions */}
           {editMode && (
-            <div className="flex gap-3 mt-4">
-              <button className="px-4 py-1 rounded bg-primary text-white font-semibold hover:bg-primary/90" onClick={handleSaveEdit}>Save</button>
-              <button className="px-4 py-1 rounded bg-muted text-foreground font-semibold hover:bg-muted/80" onClick={handleCancelEdit}>Cancel</button>
+            <div className="flex gap-2 pt-3 border-t border-border">
+              <button
+                onClick={handleSaveEdit}
+                className="flex-1 px-3 py-1.5 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors text-xs"
+              >
+                Save Changes
+              </button>
+              <button
+                onClick={handleCancelEdit}
+                className="px-3 py-1.5 bg-muted text-foreground rounded-lg font-medium hover:bg-muted/80 transition-colors text-xs"
+              >
+                Cancel
+              </button>
             </div>
           )}
-          <div className="mt-8">
-            <AITaskSuggestions task={{ title: task.title, description: task.description, subTasks: subTasks }} />
-          </div>
         </div>
       </ScrollArea>
     </div>
