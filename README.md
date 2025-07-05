@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Smart Task Manager with AI Assistance
 
-First, run the development server:
+## 📝 Project Overview
+
+The **Smart Task Manager** lets users easily organize tasks with help from AI-powered subtask suggestions using **Google Gemini**. It features a clean **Next.js** frontend, a secure **Express** backend, and a **PostgreSQL** database hosted on **Supabase**. Users can create, edit, and manage tasks, while AI breaks work into clear subtasks. Secure API routes, responsive design, and smooth deployment make task management smart, simple, and reliable.
+
+
+---
+
+## 📂 Project Structure
+
+- **Frontend:** Next.js (App Router) + Tailwind CSS + TypeScript  
+- **Backend:** Express.js + Prisma ORM  
+- **Database:** PostgreSQL (via Supabase)  
+- **AI Integration:** Google Gemini API  
+- **Deployment:** Firebase Hosting
+
+---
+
+## ✅ Key Features
+
+- Create, update, and delete tasks
+- Get **AI-generated subtask suggestions** with one click
+- Store tasks and subtasks in a secure PostgreSQL database
+- Fast and responsive UI with Tailwind CSS
+- Environment-based API key management for secure AI requests
+
+---
+
+## Challenges Faced
+
+- Parsing Gemini’s AI response reliably and splitting it into clear, usable subtasks.
+- Keeping the API key secure using environment variables and server API routes.
+- Handling Gemini API errors gracefully to prevent the app from breaking.
+- Keeping the UI simple, clean, and responsive while focusing on working core features.
+
+---
+
+## Setup Instructions
+
+### 1️⃣ Clone this repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git https://github.com/Siyammahdi/ai-task-management-taskify
+cd ai-task-management-taskify
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2️⃣ Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+_or_
 
-## Learn More
+```bash
+npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 4️⃣ Run the project locally
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
