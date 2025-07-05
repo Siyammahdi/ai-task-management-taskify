@@ -28,6 +28,16 @@ The **Smart Task Manager** lets users easily organize tasks with help from AI-po
 
 ---
 
+## 📸 Screenshots
+
+![Dashboard Screenshot](./screenshots/dashboard.png)  
+*Task Manager Dashboard showing task list and AI suggestions.*
+
+![Task Detail Screenshot](./screenshots/task-details.png)  
+*Detailed task view with subtasks and editing options.*
+
+---
+
 ## Challenges Faced
 
 - Parsing Gemini’s AI response reliably and splitting it into clear, usable subtasks.
