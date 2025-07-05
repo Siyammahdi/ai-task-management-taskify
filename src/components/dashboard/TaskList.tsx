@@ -52,20 +52,9 @@ export default function TaskList({
       <div className={`${getGridClasses()} pb-8`}>
         {tasks.length === 0 ? (
           <div className="col-span-full flex flex-col items-center justify-center h-64 gap-4 select-none animate-fade-in">
-            <div className="rounded-full bg-primary/10 p-4 shadow-md mb-2">
-              <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-primary opacity-80 animate-bounce-slow">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-3-3v6m9 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
             <div className="text-xl font-semibold text-primary mb-1">No Tasks Found</div>
             <div className="text-muted-foreground text-base mb-2 text-center max-w-xs">You have no tasks yet. Create your first task to get started and boost your productivity!</div>
-            <button
-              type="button"
-              className="mt-2 px-5 py-2.5 bg-primary text-white rounded-lg font-medium shadow hover:bg-primary/90 transition-colors text-base"
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            >
-              + Add Task
-            </button>
+
           </div>
         ) : (
           tasks.map((task) => {

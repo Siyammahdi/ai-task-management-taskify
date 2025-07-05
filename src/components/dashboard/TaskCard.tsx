@@ -47,7 +47,7 @@ export default function TaskCard({
   isCompact?: boolean;
 }) {
   return (
-    <div className={`flex flex-col gap-2 ${isCompact ? 'p-2 sm:p-3' : 'p-3 sm:p-4 lg:p-5'} bg-card rounded-xl relative transition-smooth card-hover ${isSelected ? "bg-primary/10" : ""}`}>
+    <div className={`flex flex-col gap-2 ${isCompact ? 'p-2 sm:p-3' : 'p-3 sm:p-4 lg:p-5'} bg-card rounded-xl relative transition-smooth  ${isSelected ? "bg-primary/10" : ""}`}>
       <div className="flex items-center gap-2 mb-1">
         {showStatusIcon && getStatusIcon(task.status)}
         <h2 className={`font-semibold ${isCompact ? 'text-xs sm:text-sm' : 'text-sm sm:text-base lg:text-lg'} truncate max-w-[70%] ${isSelected ? "text-primary" : ""}`}>
