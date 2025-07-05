@@ -35,17 +35,17 @@ function formatDate(dateString: string): string {
 
 export default function TaskCard({ task, showStatusIcon, isSelected, onDeleteClick }: { task: Task; showStatusIcon?: boolean; isSelected?: boolean; onDeleteClick?: (e: React.MouseEvent, taskId: string) => void }) {
   return (
-    <div className={"flex flex-col gap-2 p-5 bg-card rounded-xl relative " + (isSelected ? "bg-primary/10" : "") }>
+    <div className={"flex flex-col gap-2 p-2 md:p-5 bg-card rounded-xl relative " + (isSelected ? "bg-primary/10" : "") }>
       <div className="flex items-center gap-2 mb-1">
         {showStatusIcon && getStatusIcon(task.status)}
-        <h2 className={"font-semibold text-lg truncate max-w-[70%] " + (isSelected ? "text-primary" : "")}>{task.title}</h2>
-        <span className="ml-auto flex items-center gap-1 text-xs px-2 py-1 rounded-md bg-primary/10 text-primary uppercase font-semibold">
+        <h2 className={"font-semibold text-base md:text-lg truncate max-w-[70%] " + (isSelected ? "text-primary" : "")}>{task.title}</h2>
+        <span className="ml-auto flex items-center gap-1 text-[9px] md:text-xs px-2 py-1 rounded-md bg-primary/10 text-primary uppercase font-semibold">
           {getStatusIcon(task.status)}
           {task.status}
         </span>
       </div>
-      <p className="text-sm text-muted-foreground line-clamp-2">{task.description}</p>
-      <div className="flex items-center justify-between text-xs mt-2">
+      <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">{task.description}</p>
+      <div className="flex items-center justify-between text-[10px] md:text-xs mt-2">
         <span>Due: {formatDate(task.dueDate)}</span>
         <div className="flex items-center gap-2">
           {task.subTasks && (

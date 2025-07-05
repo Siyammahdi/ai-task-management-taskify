@@ -18,8 +18,8 @@ export default function TaskList({ tasks, onSelect, selectedTask, singleColumn =
   const handleCancelDelete = () => setDeleteId(null);
 
   return (
-    <div className="h-full overflow-y-auto pr-3">
-      <div className={(singleColumn ? "flex flex-col gap-6" : "grid grid-cols-1 md:grid-cols-2 gap-6 min-h-0") + " pb-12"}>
+    <div className="h-full overflow-y-auto md:pr-3">
+      <div className={(singleColumn ? "flex flex-col gap-3 md:gap-6" : "grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 min-h-0") + " pb-12"}>
         {tasks.length === 0 ? (
           <div className="col-span-2 flex items-center justify-center text-muted-foreground text-lg h-40">
             No tasks found.
